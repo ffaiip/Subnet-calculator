@@ -9,7 +9,7 @@
                     <v-layout row>
                         <v-flex xs2>
                             <v-card-text>
-                                <h3>Class</h3>
+                                <div>Class</div>
                             </v-card-text>
                             <v-combobox
                                 class="pl-3"
@@ -20,7 +20,7 @@
                         <v-spacer></v-spacer>
                         <v-flex xs6>
                             <v-card-text>
-                                <h3>IP address</h3>
+                                <div>IP address</div>
                             </v-card-text>
                             <v-layout>
                                 <v-flex xs2>
@@ -71,7 +71,7 @@
                     <v-layout>
                         <v-flex xs6>
                             <v-card-text>
-                                <h3>Require</h3>
+                                <div>Require</div>
                             </v-card-text>
                             <v-layout row>
                                 <v-flex xs3>
@@ -94,7 +94,7 @@
                         </v-flex>
                         <v-flex>
                             <v-card-text>
-                                <h3>Subnet mask</h3>
+                                <div>Subnet mask</div>
                             </v-card-text>
                             <v-layout row>
                                 <v-flex xs3>
