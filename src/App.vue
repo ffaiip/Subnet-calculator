@@ -17,7 +17,3 @@ export default {
 }
 </script>
 
-<style lang="scss">
-  @import './style/font.scss';
-</style>
-

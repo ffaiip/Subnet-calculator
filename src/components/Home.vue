@@ -4,12 +4,12 @@
             <v-flex xs12>
                 <v-card>
                     <v-card-title>
-                        <h1 class="info--text">Subnet calculator</h1>
+                        <h2 class="info--text">SUBNET CALCULATOR</h2>
                     </v-card-title>
                     <v-layout row>
                         <v-flex xs2>
                             <v-card-text>
-                                <h3>Class</h3>
+                                <div>Class</div>
                             </v-card-text>
                             <v-combobox
                                 class="pl-3"
@@ -20,7 +20,7 @@
                         <v-spacer></v-spacer>
                         <v-flex xs6>
                             <v-card-text>
-                                <h3>IP address</h3>
+                                <div>IP address</div>
                             </v-card-text>
                             <v-layout>
                                 <v-flex xs2>
@@ -71,7 +71,7 @@
                     <v-layout>
                         <v-flex xs6>
                             <v-card-text>
-                                <h3>Require</h3>
+                                <div>Require</div>
                             </v-card-text>
                             <v-layout row>
                                 <v-flex xs3>
@@ -94,12 +94,12 @@
                         </v-flex>
                         <v-flex>
                             <v-card-text>
-                                <h3>Subnet mask</h3>
+                                <div>Subnet mask</div>
                             </v-card-text>
                             <v-layout row>
                                 <v-flex xs3>
                                     <v-card-text>
-                                        <h4 class="headline mb-0">{{ this.subnetMask }}</h4>
+                                        <div class="headline mb-0">{{ this.subnetMask }}</div>
                                     </v-card-text>
                                 </v-flex>    
                             </v-layout>
@@ -128,7 +128,7 @@
                         <td class="text-xs-right">{{ props.item.first }}</td>
                         <td class="text-xs-right">{{ props.item.last }}</td>
                         <td class="text-xs-right">{{ props.item.broadcast }}</td>
-                        </template>
+                    </template>
                 </v-data-table>
             </v-flex>
         </v-layout>
