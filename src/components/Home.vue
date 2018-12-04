@@ -9,18 +9,16 @@
                     <v-layout row>
                         <v-flex xs2>
                             <v-card-text>
-                                <h3>Class</h3>
+                                <div>Class</div>
                             </v-card-text>
-                            <v-combobox
-                                class="pl-3"
-                                v-model="classIP"
-                                :items="classes"
-                            ></v-combobox>
+                            <v-card-text>
+                                <h4>{{ this.classIP }}</h4>
+                            </v-card-text>
                         </v-flex>
                         <v-spacer></v-spacer>
                         <v-flex xs6>
                             <v-card-text>
-                                <h3>IP address</h3>
+                                <div>IP address</div>
                             </v-card-text>
                             <v-layout>
                                 <v-flex xs2>
@@ -29,6 +27,7 @@
                                         name="ip1"
                                         id="ip1"
                                         v-model="ip1"
+                                        maxlength="3"
                                         required>
                                     </v-text-field>
                                 </v-flex>
@@ -38,8 +37,7 @@
                                         name="ip2"
                                         id="ip2"
                                         v-model="ip2"
-                                        :label="defaultA"
-                                        :disabled="classA"
+                                        maxlength="3"
                                         required>
                                     </v-text-field>
                                 </v-flex>
@@ -49,8 +47,7 @@
                                         name="ip3"
                                         id="ip3"
                                         v-model="ip3"
-                                        :label="defaultB"
-                                        :disabled="classB"
+                                        maxlength="3"
                                         required>
                                     </v-text-field>
                                 </v-flex>
@@ -60,8 +57,7 @@
                                         name="ip4"
                                         id="ip4"
                                         v-model="ip4"
-                                        :label="defaultC"
-                                        :disabled="classC"
+                                        maxlength="3"
                                         required>
                                     </v-text-field>
                                 </v-flex>
@@ -71,7 +67,7 @@
                     <v-layout>
                         <v-flex xs6>
                             <v-card-text>
-                                <h3>Require</h3>
+                                <div>Require</div>
                             </v-card-text>
                             <v-layout row>
                                 <v-flex xs3>
@@ -94,7 +90,7 @@
                         </v-flex>
                         <v-flex>
                             <v-card-text>
-                                <h3>Subnet mask</h3>
+                                <div>Subnet mask</div>
                             </v-card-text>
                             <v-layout row>
                                 <v-flex xs3>
@@ -102,6 +98,51 @@
                                         <h4 class="headline mb-0">{{ this.subnetMask }}</h4>
                                     </v-card-text>
                                 </v-flex>    
+                            </v-layout>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout>
+                        <v-flex xs6>
+                            <v-card-text>
+                                <div>Range</div>
+                            </v-card-text>
+                            <v-layout row>
+                                <v-flex xs6>
+                                    <v-text-card>
+                                        {{ this.firstAdd }}
+                                    </v-text-card>
+                                </v-flex>
+                                <v-flex xs4>
+                                    <v-text-card>
+                                        {{ this.lastAdd }}
+                                    </v-text-card>
+                                </v-flex>
+                            </v-layout>
+                        </v-flex>
+                        <v-flex>
+                            <v-card-text>
+                                <div>Subnet ID</div>
+                            </v-card-text>
+                            <v-layout row>
+                                <v-flex xs3>
+                                    <v-card-text>
+                                        <h4 class="headline mb-0">{{ this.subnetID}}</h4>
+                                    </v-card-text>
+                                </v-flex>    
+                            </v-layout>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout>
+                        <v-flex>
+                            <v-card-text>
+                                <div>Broadcast</div>
+                            </v-card-text>
+                            <v-layout>
+                                <v-flex xs3>
+                                    <v-card-text>
+                                        <h4 class="headline mb-0">{{ this.broadcast }}</h4>
+                                    </v-card-text>
+                                </v-flex>
                             </v-layout>
                         </v-flex>
                     </v-layout>
@@ -113,28 +154,6 @@
                         >Calculate</v-btn>
                     </v-card-actions>
                 </v-card>
-            </v-flex>
-        </v-layout>
-        <v-layout row>
-            <v-flex xs12>
-                <!-- <v-data-table
-                    :headers="headers"
-                    :items="subnets"
-                    class="elevation-1"
-                    >
-                    <template slot="items" slot-scope="props">
-                        <td>{{ props.item.number }}</td>
-                        <td class="text-xs-right">{{ props.item.subnetID }}</td>
-                        <td class="text-xs-right">{{ props.item.first }}</td>
-                        <td class="text-xs-right">{{ props.item.last }}</td>
-                        <td class="text-xs-right">{{ props.item.broadcast }}</td>
-                        </template>
-                </v-data-table> -->
-                <template>
-                    <v-card>
-
-                    </v-card>
-                </template>
             </v-flex>
         </v-layout>
     </v-container>
@@ -150,56 +169,25 @@ export default {
       ip4: "",
       amount: "",
       hosts: "",
-      classIP: "",
-      classes: ["A", "B", "C"],
+      firstAdd: "",
+      lastAdd: "",
       hostsNet: ["Hosts per Network", "Networks"],
       subnetMask: "0.0.0.0",
-      headers: [
-        {
-          text: "Subnet",
-          align: "left",
-          value: "number"
-        },
-        { text: "Subnet ID", value: "subnetID", sortable: false },
-        { text: "First add", value: "first", sortable: false },
-        { text: "Last add", value: "last", sortable: false },
-        { text: "Broadcast", value: "broadcast", sortable: false }
-      ],
-      // subnetRow: {
-      //     value: false,
-      //     number: '',
-      //     subnetID: '',
-      //     first: '',
-      //     last: '',
-      //     broadcast: '',
-      // },
-      subnets: []
+      broadcast: "",
+      subnetID: ""
     };
   },
   computed: {
-    defaultC() {
-      if (this.classIP == "C" || this.classIP == "B" || this.classIP == "A") {
-        return "0";
+    classIP() {
+      if (this.ip1 == "") {
+        return " ";
+      } else if (this.ip1 <= 127) {
+        return "A";
+      } else if (this.ip1 <= 191 && this.ip1 >= 128) {
+        return "B";
+      } else if (this.ip1 >= 192 && this.ip1 <= 223) {
+        return "C";
       }
-    },
-    defaultB() {
-      if (this.classIP == "B" || this.classIP == "A") {
-        return "0";
-      }
-    },
-    defaultA() {
-      if (this.classIP == "A") {
-        return "0";
-      }
-    },
-    classC() {
-      return this.classIP == "C" || this.classIP == "B" || this.classIP == "A";
-    },
-    classB() {
-      return this.classIP == "B" || this.classIP == "A";
-    },
-    classA() {
-      return this.classIP == "A";
     },
     ip() {
       if (this.classIP == "C") {
@@ -211,11 +199,7 @@ export default {
   },
   methods: {
     addInfo() {
-      if (this.ip4 != 0) {
-        alert("ข้อมูลใช้ไม่ได้ ใส่ใหม่ว้อยยยยย");
-      } else {
-        this.Calculate(this.classIP, this.amount);
-      }
+      this.Calculate(this.classIP, this.amount);
     },
     requireHost(input, cls) {
       //require = this.hosts
@@ -300,59 +284,80 @@ export default {
           return `0.0.0.0`;
       }
     },
-    checkClass(ipNumber) {
-      if (ipNumber <= 127) return "A";
-      else if (ipNumber >= 128 && ipNumber <= 191) return "B";
-      else if (ipNumber >= 192 && ipNumber <= 223) return "C";
-    },
-    range_host(cls) {
-        var h = this.requireHost(this.amount, cls);
+    last_host(cls, del) {
+      var h = this.requireHost(this.amount, cls) - 1;
       switch (cls) {
         case "A":
           if (h > 16) {
             var k = 24 - h;
-            return `${this.ip1}.${Math.pow(2, k)}.255.255`;
+            return `${this.ip1}.255.255.${255 - del}`;
           } else if (h <= 16 && h > 8) {
             var k = 16 - h;
-            return `${this.ip1}.255.${Math.pow(2, k)}.255`;
+            return `${this.ip1}.${this.ip2}.255.${255 - del}`;
           } else if (h <= 8) {
-            return `${this.ip1}.255.255.${Math.pow(2, h)}`;
+            return `${this.ip1}.${this.ip2}.${this.ip3}.${255- del}`;
           }
         case "B":
           if (h > 8) {
             var k = 16 - h;
-            return `${this.ip1}.${this.ip2}.${Math.pow(2, k)}.255`;
-          } else if (h <= 8) {
-            return `${this.ip1}.${this.ip2}.255.${Math.pow(2, h)}`;
+            return `${this.ip1}.${this.ip2}.255.${255 - del}`;
+          }  else if (h <= 8) {
+            return `${this.ip1}.${this.ip2}.${this.ip3}.${255 - del}`;
           }
         case "C":
-          return `${this.ip1}.${this.ip2}.${this.ip3}.${Math.pow(2, h)}`;
+          return `${this.ip1}.${this.ip2}.${this.ip3}.${255 - del}`;
         default:
           break;
       }
     },
-    range_net(cls) {
-      var k = this.requireHost(this.amount, cls);
+    last_net(cls, del) {
+      var k = this.requireHost(this.amount, cls) - 1;
       switch (cls) {
         case "A":
           if (k <= 8) {
-            return `${this.ip1}.${Math.pow(2, k)}.255.255`;
+            return `${this.ip1}.255.255.${255 - del}`;
           } else if (k <= 16 && k > 8) {
             var h = 16 - k;
-            return `${this.ip1}.255.${Math.pow(2, h)}.255`;
+            return `${this.ip1}.${this.ip2}.255.${255 - del}`;
           } else if (k > 16) {
             var h = 24 - k;
-            return `${this.ip1}.255.255.${Math.pow(2, h)}`;
+            return `${this.ip1}.${this.ip2}.${this.ip3}.${255 - del}`;
           }
         case "B":
           if (k <= 8) {
-            return `${this.ip1}.${this.ip2}.${Math.pow(2, k)}.255`;
+            return `${this.ip1}.${this.ip2}.255.${255 - del}`;
           } else if (k > 8) {
             var h = 16 - k;
-            return `${this.ip1}.${this.ip2}.255.${Math.pow(2, h)}`;
+            return `${this.ip1}.${this.ip2}.${this.ip3}.${255 - del}`;
           }
         case "C":
-          return `${this.ip1}.${this.ip2}.${this.ip3}.${Math.pow(2, h)}`;
+          return `${this.ip1}.${this.ip2}.${this.ip3}.${255 - del}`;
+        default:
+          break;
+      }
+    },
+    subnet(cls, add) {
+      var h = this.requireHost(this.amount, cls) - 1;
+      switch (cls) {
+        case "A":
+          if (h > 16) {
+            var k = 24 - h;
+            return `${this.ip1}.0.0.${0 + add}`;
+          } else if (h <= 16 && h > 8) {
+            var k = 16 - h;
+            return `${this.ip1}.${this.ip2}.0.${0 + add}`;
+          } else if (h <= 8) {
+            return `${this.ip1}.${this.ip2}.${this.ip3 - 1}.${0 + add}`;
+          }
+        case "B":
+          if (h > 8) {
+            var k = 16 - h;
+            return `${this.ip1}.${this.ip2}.0.${0 + add}`;
+          } else if (h < 8) {
+            return `${this.ip1}.${this.ip2}.${this.ip3 - 1}.${0 + add}`;
+          }
+        case "C":
+          return `${this.ip1}.${this.ip2}.${this.ip3}.${0 + add}`;
         default:
           break;
       }
@@ -360,9 +365,17 @@ export default {
 
     Calculate(cls, input) {
       if (this.hosts == "Hosts per Network") {
-        this.subnetMask = this.subnet_mark_host(this.checkClass(this.ip1));
+        this.subnetMask = this.subnet_mark_host(this.classIP);
+        this.firstAdd = this.subnet(this.classIP, 1);
+        this.lastAdd = this.last_host(this.classIP, 1);
+        this.broadcast = this.last_host(this.classIP, 0);
+        this.subnetID = this.subnet(this.classIP, 0);
       } else {
-        this.subnetMask = this.subnet_mark_network(this.checkClass(this.ip1));
+        this.subnetMask = this.subnet_mark_network(this.classIP);
+        this.firstAdd = this.subnet(this.classIP, 1);
+        this.lastAdd = this.last_net(this.classIP, 1);
+        this.broadcast = this.last_net(this.classIP, 0);
+        this.subnetID = this.subnet(this.classIP, 0);
 
         alert("Success!");
       }
