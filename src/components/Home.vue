@@ -345,7 +345,7 @@ export default {
             return `${this.ip1}.0.0.${0 + add}`;
           } else if (h <= 16 && h > 8) {
             var k = 16 - h;
-            return `${this.ip1}.${this.ip2}.0.${0 + add}`;
+            return `${this.ip1}.${this.ip2 - 1}.0.${0 + add}`;
           } else if (h <= 8) {
             return `${this.ip1}.${this.ip2}.${this.ip3 - 1}.${0 + add}`;
           }
