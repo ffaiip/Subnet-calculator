@@ -144,6 +144,9 @@
 </template>
 
 <script>
+
+import 'node-ipv4';
+
 export default {
   data() {
     return {
@@ -155,10 +158,11 @@ export default {
       hosts: "",
       firstAdd: "",
       lastAdd: "",
-      hostsNet: ["Hosts per Network", "Networks"],
+      hostsNet: ["Hosts per Network"],
       subnetMask: "0.0.0.0",
       broadcast: "",
-      subnetID: ""
+      subnetID: "",
+      subn: ""
     };
   },
   computed: {
@@ -205,11 +209,7 @@ export default {
         alert("please input on the number ");
         return;
       }
-      // if (this.classIP == "C") {
-      //   return this.ip4 == "0";
-      // } else if (this.classIP == "B") {
-      //   return this.ip3 == "0", this.ip4 == "0";
-      // }
+
     }
   },
   methods: {
@@ -217,7 +217,6 @@ export default {
       this.Calculate(this.classIP, this.amount);
     },
     requireHost(input, cls) {
-      //require = this.hosts
       //cla = this.classip
       //inp = this.amount
       var i = 0;
@@ -241,13 +240,13 @@ export default {
       switch (cls) {
         case "A":
           console.log("1");
-          if (h > 16) {
+          if (h >= 16) {
             var k = 24 - h;
-            return `255.${this.fibo(8 - k, 8)}.0.0`;
-          } else if (h <= 16 && h > 8) {
+            return `255.${this.fibo(8 - k +1, 8)}.0.0`;
+          } else if (h < 16 && h >= 8) {
             var k = 16 - h;
-            return `255.255.${this.fibo(8 - k, 8)}.0`;
-          } else if (h <= 8) {
+            return `255.255.${this.fibo(8 - k +1, 8)}.0`;
+          } else if (h < 8) {
             return `255.255.255.${this.fibo(h, 8)}`;
           }
         case "B":
@@ -255,7 +254,7 @@ export default {
           if (h > 8) {
             var k = 16 - h;
             console.log(`255.255.${this.fibo(k, 8)}.0`);
-            return `255.255.${this.fibo(8 - k, 8)}.0`;
+            return `255.255.${this.fibo(8 - k+1, 8)}.0`;
           } else if (h <= 8) {
             console.log("b");
             return `255.255.255.${this.fibo(h, 8)}`;
@@ -268,129 +267,119 @@ export default {
       }
     },
 
-    subnet_mark_network(cls) {
-      var k = this.requireHost(this.amount, cls);
-
-      switch (cls) {
-        case "A":
-          console.log("4");
-          if (k <= 8) {
-            return `255.${this.fibo(k, 8)}.0.0`;
-          } else if (k <= 16 && k > 8) {
-            var h = 16 - k;
-            return `255.255.${this.fibo(h, 8)}.0`;
-          } else if (k > 16) {
-            var h = 24 - k;
-            return `255.255.255.${this.fibo(h, 8)}`;
-          }
-          break;
-        case "B":
-          console.log("5");
-          if (k <= 8) {
-            return `255.255.${this.fibo(k, 8)}.0`;
-          } else if (k > 8) {
-            var h = 16 - k;
-            return `255.255.255.${this.fibo(h, 8)}`;
-          }
-        case "C":
-          console.log("6");
-          return `255.255.255.${this.fibo(k, 8)}`;
-        default:
-          return `0.0.0.0`;
-      }
-    },
     last_host(cls, del) {
       var h = this.requireHost(this.amount, cls) - 1;
       switch (cls) {
         case "A":
-          if (h > 16) {
+          if (h >= 16) {
             var k = 24 - h;
-            return `${this.ip1}.255.255.${255 - del}`;
-          } else if (h <= 16 && h > 8) {
-            var k = 16 - h;
+            var m = this.requireHost(this.ip2, cls);
+            if(m > k) return `${this.ip1}.${(parseInt(this.amount/255)-1) + parseInt(this.ip2)-2}.255.${255 - del}`;
             return `${this.ip1}.${this.ip2}.255.${255 - del}`;
-          } else if (h <= 8) {
-            return `${this.ip1}.${this.ip2}.${this.ip3}.${255 - del}`;
+          } else if (h < 16 && h >= 8) {
+            var k = 16 - h;
+            var n = this.requireHost(this.ip3, cls);
+            if(n < k) return `${this.ip1}.${this.ip2}.${(parseInt(this.amount/255)-1) + parseInt(this.ip3)}.${255 - del}`;
+            return `${this.ip1}.${this.ip2}.${parseInt(this.ip3) + 1}.${255 - del}`;
+          } else if (h < 8) {
+            var l = parseInt(this.ip4 - 1) + parseInt(this.amount);
+            if(parseInt(this.ip4)+2 > this.amount) return `${this.ip1}.${this.ip2}.${this.ip3}.${l - del}`;
+            return `${this.ip1}.${this.ip2}.${this.ip3}.${this.amount - del}`;
           }
         case "B":
-          if (h > 8) {
+          if (h >= 8) {
             var k = 16 - h;
-            return `${this.ip1}.${this.ip2}.255.${255 - del}`;
-          } else if (h <= 8) {
-            return `${this.ip1}.${this.ip2}.${this.ip3}.${255 - del}`;
+            var n = this.requireHost(this.ip3, cls);
+            if(n < k) return `${this.ip1}.${this.ip2}.${(parseInt(this.amount/255)-1) + parseInt(this.ip3)}.${255 - del}`;
+            return `${this.ip1}.${this.ip2}.${parseInt(this.ip3) + 1}.${255 - del}`;
+          } else if (h < 8) {
+            var l = parseInt(this.ip4) + parseInt(this.amount);
+            if(parseInt(this.ip4)+2 > this.amount) return `${this.ip1}.${this.ip2}.${this.ip3}.${l - del}`;
+            return `${this.ip1}.${this.ip2}.${this.ip3}.${this.amount - del}`;
           }
         case "C":
-          return `${this.ip1}.${this.ip2}.${this.ip3}.${255 - del}`;
+          var l = parseInt(this.ip4 - 1) + parseInt(this.amount);
+          if(parseInt(this.ip4)+2 > this.amount) return `${this.ip1}.${this.ip2}.${this.ip3}.${l - del}`;
+          return `${this.ip1}.${this.ip2}.${this.ip3}.${(parseInt(this.amount)+1) - del}`;
         default:
           break;
       }
     },
-    last_net(cls, del) {
-      var k = this.requireHost(this.amount, cls) - 1;
-      switch (cls) {
-        case "A":
-          if (k <= 8) {
-            return `${this.ip1}.255.255.${255 - del}`;
-          } else if (k <= 16 && k > 8) {
-            var h = 16 - k;
-            return `${this.ip1}.${this.ip2}.255.${255 - del}`;
-          } else if (k > 16) {
-            var h = 24 - k;
-            return `${this.ip1}.${this.ip2}.${this.ip3}.${255 - del}`;
-          }
-        case "B":
-          if (k <= 8) {
-            return `${this.ip1}.${this.ip2}.255.${255 - del}`;
-          } else if (k > 8) {
-            var h = 16 - k;
-            return `${this.ip1}.${this.ip2}.${this.ip3}.${255 - del}`;
-          }
-        case "C":
-          return `${this.ip1}.${this.ip2}.${this.ip3}.${255 - del}`;
-        default:
-          break;
-      }
-    },
+
     subnet(cls, add) {
       var h = this.requireHost(this.amount, cls) - 1;
       switch (cls) {
         case "A":
           if (h > 16) {
             var k = 24 - h;
-            return `${this.ip1}.0.0.${0 + add}`;
+            var m = this.requireHost(this.ip2, cls);
+            if(m > k) return `${this.ip1}.${parseInt(this.ip2) - 2}.0.${0 + add}`;
+            return `${this.ip1}.${this.ip2}.0.${0 + add}`;
           } else if (h <= 16 && h > 8) {
             var k = 16 - h;
-            return `${this.ip1}.${this.ip2 - 1}.0.${0 + add}`;
+            var n = this.requireHost(this.ip3, cls);
+            if(n < k) return `${this.ip1}.${this.ip2}.${parseInt(this.ip3) - 2}.${0 + add}`;
+            return `${this.ip1}.${this.ip2}.0.${0 + add}`;
           } else if (h <= 8) {
+            if(this.ip4+2 > this.amount) return `${this.ip1}.${this.ip2}.${this.ip3}.${parseInt(this.ip4) - 2 + add}`;
             return `${this.ip1}.${this.ip2}.${this.ip3}.${0 + add}`;
           }
         case "B":
           if (h > 8) {
             var k = 16 - h;
+            var n = this.requireHost(this.ip2, cls);
+            if(n < k) return `${this.ip1}.${this.ip2}.${parseInt(this.ip3) - 2}.${0 + add}`;
             return `${this.ip1}.${this.ip2}.0.${0 + add}`;
           } else if (h < 8) {
+            if(this.ip4+2 > this.amount) return `${this.ip1}.${this.ip2}.${this.ip3}.${parseInt(this.ip4) - 2 + add}`;
             return `${this.ip1}.${this.ip2}.${this.ip3}.${0 + add}`;
           }
         case "C":
+        console.log(parseInt(this.ip4)+2)
+          if(parseInt(this.ip4)+2 > this.amount) return `${this.ip1}.${this.ip2}.${this.ip3}.${parseInt(this.ip4) - 2 + add}`;
           return `${this.ip1}.${this.ip2}.${this.ip3}.${0 + add}`;
         default:
           break;
       }
     },
+    sub(ip, host){
+      
+      const ipv4 = require('node-ipv4');
+ 
+      ipv4.parse(ip, host, (err, subnet) => { 
+        if (err) return console.error(err);
+
+        this.subn = subnet;
+        console.log(subnet);
+      });
+
+    },
+    mask(input, cls){
+      switch (cls) {
+        case 'A':
+          return 36 - input;
+        case 'B':
+          return 36 - input;
+        case 'C':
+          return 36 - input;    
+      
+        default:
+          break;
+      }
+
+    },
 
     Calculate(cls, input) {
+      var ip = `${this.ip1}.${this.ip2}.${this.ip3}.${this.ip4}`;
+      
+      console.log(this.subn);
       if (this.hosts == "Hosts per Network") {
-        this.subnetMask = this.subnet_mark_host(this.classIP);
-        this.firstAdd = this.subnet(this.classIP, 1);
-        this.lastAdd = this.last_host(this.classIP, 1);
-        this.broadcast = this.last_host(this.classIP, 0);
-        this.subnetID = this.subnet(this.classIP, 0);
-      } else if (this.hosts == "Networks") {
-        this.subnetMask = this.subnet_mark_network(this.classIP);
-        this.firstAdd = this.subnet(this.classIP, 1);
-        this.lastAdd = this.last_net(this.classIP, 1);
-        this.broadcast = this.last_net(this.classIP, 0);
-        this.subnetID = this.subnet(this.classIP, 0);
+        this.sub(ip, this.mask(this.requireHost(input, cls), cls));
+        this.subnetMask = this.subnet_mark_host(cls);
+        this.firstAdd = this.subnet(cls, 1);
+        this.lastAdd = this.last_host(cls, 1);
+        this.broadcast = this.last_host(cls, 0);
+        this.subnetID = this.subnet(cls, 0);
 
         alert("Success!");
       } else {
