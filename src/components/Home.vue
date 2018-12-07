@@ -208,6 +208,12 @@ export default {
         this.amount = "";
         alert("please input on the number ");
         return;
+      } else if(this.classIP === 'C' && this.amount > 255){
+        alert("invalid host for class C");
+        return;
+      } else if(this.classIP === 'B' && this.amount > 66534){
+        alert("invalid host for Class B")
+        return;
       }
 
     }
@@ -279,18 +285,18 @@ export default {
           } else if (h < 16 && h >= 8) {
             var k = 16 - h;
             var n = this.requireHost(this.ip3, cls);
-            if(n < k) return `${this.ip1}.${this.ip2}.${(parseInt(this.amount/255)-1) + parseInt(this.ip3)}.${255 - del}`;
+            if(n > k) return `${this.ip1}.${this.ip2}.${(parseInt(this.amount/255)-1) + parseInt(this.ip3)-2}.${255 - del}`;
             return `${this.ip1}.${this.ip2}.${parseInt(this.ip3) + 1}.${255 - del}`;
           } else if (h < 8) {
             var l = parseInt(this.ip4 - 1) + parseInt(this.amount);
             if(parseInt(this.ip4)+2 > this.amount) return `${this.ip1}.${this.ip2}.${this.ip3}.${l - del}`;
-            return `${this.ip1}.${this.ip2}.${this.ip3}.${this.amount - del}`;
+            return `${this.ip1}.${this.ip2}.${this.ip3}.${parseInt(this.amount) +1 - del}`;
           }
         case "B":
           if (h >= 8) {
             var k = 16 - h;
             var n = this.requireHost(this.ip3, cls);
-            if(n < k) return `${this.ip1}.${this.ip2}.${(parseInt(this.amount/255)-1) + parseInt(this.ip3)}.${255 - del}`;
+            if(n > k) return `${this.ip1}.${this.ip2}.${(parseInt(this.amount/255)-1) + parseInt(this.ip3)-2}.${255 - del}`;
             return `${this.ip1}.${this.ip2}.${parseInt(this.ip3) + 1}.${255 - del}`;
           } else if (h < 8) {
             var l = parseInt(this.ip4) + parseInt(this.amount);
@@ -318,7 +324,7 @@ export default {
           } else if (h <= 16 && h > 8) {
             var k = 16 - h;
             var n = this.requireHost(this.ip3, cls);
-            if(n < k) return `${this.ip1}.${this.ip2}.${parseInt(this.ip3) - 2}.${0 + add}`;
+            if(n < k) return `${this.ip1}.${parseInt(this.ip2) - 1}.${parseInt(this.ip3) - 2}.${0 + add}`;
             return `${this.ip1}.${this.ip2}.0.${0 + add}`;
           } else if (h <= 8) {
             if(this.ip4+2 > this.amount) return `${this.ip1}.${this.ip2}.${this.ip3}.${parseInt(this.ip4) - 2 + add}`;
